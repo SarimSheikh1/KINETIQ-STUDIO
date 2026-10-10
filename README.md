@@ -38,6 +38,17 @@ npm run build
 npm start
 ```
 
+For the temporary database integration scenario and browser suite:
+
+```powershell
+$env:RUN_DB_TESTS = '1'
+npm test
+Remove-Item Env:RUN_DB_TESTS
+npm exec -w client -- playwright test
+```
+
+The first database test run downloads a temporary MongoDB binary. Browser tests use installed Microsoft Edge and an isolated dev server on port 5178.
+
 Production serves `client/dist` from Express. Set `NODE_ENV=production`, a strong `SESSION_SECRET`, the deployed `CLIENT_ORIGIN`, and a MongoDB connection. Serve the entire app under the same HTTPS origin. Secure cookies require HTTPS. Set `TRUST_PROXY=1` only when a trusted reverse proxy is in front of Express. The default port is 4000.
 
 The production Content Security Policy allows local application code and images. Media URLs are restricted by validation. Deployments need persistent storage for `UPLOAD_DIR`; the local upload adapter currently stores validated raster images with random names in that directory. Back up MongoDB and uploads together. Configure a dedicated object-storage adapter before deploying on ephemeral disks or scaling across multiple servers. Do not expose MongoDB directly to the public internet.

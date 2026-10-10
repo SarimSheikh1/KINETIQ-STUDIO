@@ -23,9 +23,7 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.64.0",
     "mongodb-memory-server": "^11.3.0",
-    "prettier": "^3.9.9",
     "supertest": "^7.1.0"
   }
 }

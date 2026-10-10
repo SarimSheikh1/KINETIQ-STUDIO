@@ -1,4 +1,39 @@
 @import "tailwindcss";
+.hero-word {
+  display: inline-block;
+}
+.menu {
+  animation: menu-reveal 0.4s ease both;
+}
+.ticker {
+  transform: skewY(var(--velocity, 0deg));
+  transition: transform 0.2s;
+}
+.hero-meta {
+  animation: metadata-reveal 1s ease both;
+}
+.art-tag {
+  transition: letter-spacing 0.4s;
+}
+.project-link:hover .art-tag {
+  letter-spacing: 0.2em;
+}
+@keyframes menu-reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@keyframes metadata-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 @theme {
   --color-ivory: #f5f0e8;
   --color-ink: #121212;
@@ -105,7 +140,7 @@ header {
   font-size: 8px;
   letter-spacing: 0.1em;
   position: absolute;
-  top: 30px;
+  top: 36px;
   left: 2px;
 }
 .brand-star {
@@ -182,6 +217,8 @@ header {
   margin-left: auto;
 }
 .hero {
+  display: flex;
+  flex-direction: column;
   padding: 27px 4% 0;
   min-height: calc(100svh - 100px);
   position: relative;
@@ -203,6 +240,7 @@ header {
   box-shadow: 0 0 0 4px #ff654f15;
 }
 .hero-title {
+  flex: 1;
   position: relative;
   padding-top: 45px;
 }
@@ -1593,6 +1631,10 @@ form input[type="color"] {
   }
 }
 @media (max-width: 760px) {
+  h1 {
+    font-size: clamp(40px, 11.5vw, 80px);
+    overflow-wrap: anywhere;
+  }
   header {
     height: 80px;
     padding: 0 5%;

@@ -191,7 +191,7 @@ export default function Admin() {
   if (!ready)
     return (
       <section className="section" role="status">
-        Checking sessionâ€¦
+        Checking session…
       </section>
     );
   if (!user)
@@ -224,7 +224,7 @@ export default function Admin() {
             </p>
           )}
           <button className="submit-btn" disabled={busy}>
-            {busy ? "Signing inâ€¦" : "Sign in"}
+            {busy ? "Signing in…" : "Sign in"}
           </button>
           <p className="muted">
             Create your first administrator with the secure terminal setup
@@ -289,7 +289,7 @@ export default function Admin() {
         </p>
       )}
       {loading ? (
-        <p role="status">Loading recordsâ€¦</p>
+        <p role="status">Loading records…</p>
       ) : module === "overview" ? (
         <div className="overview-grid">
           {Object.entries(counts).map(([k, n]) => (
@@ -524,7 +524,7 @@ export default function Admin() {
               storage directory.
             </p>
             <button className="submit-btn" disabled={busy}>
-              {busy ? "Savingâ€¦" : "Save changes"}
+              {busy ? "Saving…" : "Save changes"}
             </button>
           </form>
         </div>

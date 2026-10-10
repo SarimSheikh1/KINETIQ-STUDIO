@@ -1,9 +1,23 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
-import { useRef } from "react";
-import { Mesh } from "three";
+import { useEffect, useMemo, useRef } from "react";
+import { Mesh, TorusKnotGeometry } from "three";
 function Form() {
   const ref = useRef<Mesh>(null);
+  const geometry = useMemo(() => {
+    const form = new TorusKnotGeometry(1.1, 0.4, 180, 28, 2, 3);
+    const position = form.attributes.position;
+    for (let i = 0; i < position.count; i++) {
+      const x = position.getX(i),
+        y = position.getY(i),
+        z = position.getZ(i);
+      const wave = 1 + 0.09 * Math.sin(y * 3 + z * 2);
+      position.setXYZ(i, x * wave, y * 1.16, z * wave);
+    }
+    form.computeVertexNormals();
+    return form;
+  }, []);
+  useEffect(() => () => geometry.dispose(), [geometry]);
   useFrame(({ clock, pointer, camera }, delta) => {
     if (!ref.current) return;
     ref.current.rotation.y += delta * 0.16;
@@ -14,8 +28,7 @@ function Form() {
   });
   return (
     <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.35}>
-      <mesh ref={ref} rotation={[0.5, 0, 0.3]}>
-        <torusKnotGeometry args={[1.15, 0.42, 180, 28, 2, 3]} />
+      <mesh ref={ref} rotation={[0.5, 0, 0.3]} geometry={geometry}>
         <meshStandardMaterial
           color="#FF654F"
           roughness={0.23}
@@ -29,7 +42,7 @@ export default function Sculpture() {
   return (
     <Canvas
       dpr={[1, 1.5]}
-      camera={{ position: [0, 0, 5], fov: 42 }}
+      camera={{ position: [0, 0, 6.4], fov: 42 }}
       gl={{ antialias: true, alpha: true }}
       aria-label="Interactive coral sculptural knot"
     >

@@ -1,9 +1,25 @@
-import { lazy, Suspense, useState } from "react";
+import { Component, lazy, Suspense, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { useContent } from "../contexts/Content";
 import Art from "../components/Art";
 const Sculpture = lazy(() => import("../three/Sculpture"));
+class SculptureBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? (
+      <div className="fallback-sculpture">✳</div>
+    ) : (
+      this.props.children
+    );
+  }
+}
 export default function Home() {
   const { data } = useContent();
   const [scene] = useState(
@@ -23,7 +39,8 @@ export default function Home() {
         </div>
         <div className="hero-title">
           <h1 className="page-enter">
-            IDEAS THAT
+            <span className="hero-word">IDEAS</span>{" "}
+            <span className="hero-word">THAT</span>
             <br />
             <span className="move-line">
               MOVE<span className="hero-outline">↗</span>
@@ -33,9 +50,13 @@ export default function Home() {
           </h1>
           <div className="sculpture-wrap">
             {scene ? (
-              <Suspense fallback={<div className="fallback-sculpture">✳</div>}>
-                <Sculpture />
-              </Suspense>
+              <SculptureBoundary>
+                <Suspense
+                  fallback={<div className="fallback-sculpture">✳</div>}
+                >
+                  <Sculpture />
+                </Suspense>
+              </SculptureBoundary>
             ) : (
               <div className="fallback-sculpture">✳</div>
             )}
@@ -92,24 +113,27 @@ export default function Home() {
           </p>
         </div>
         <div className="home-work-grid">
-          {data.projects.slice(0, 4).map((p: any, i: number) => (
-            <Link
-              to={"/work/" + p.slug}
-              key={p.slug}
-              className={"project-link project-" + i}
-              data-cursor="VIEW"
-              data-reveal
-            >
-              <Art project={p} />
-              <div className="project-caption">
-                <h3>{p.title}</h3>
-                <span>
-                  {p.category} / 2026 <ArrowUpRight size={19} />
-                </span>
-              </div>
-              <p>{p.summary}</p>
-            </Link>
-          ))}
+          {data.projects
+            .filter((p: any) => p.featured)
+            .slice(0, 4)
+            .map((p: any, i: number) => (
+              <Link
+                to={"/work/" + p.slug}
+                key={p.slug}
+                className={"project-link project-" + i}
+                data-cursor="VIEW"
+                data-reveal
+              >
+                <Art project={p} />
+                <div className="project-caption">
+                  <h3>{p.title}</h3>
+                  <span>
+                    {p.category} / 2026 <ArrowUpRight size={19} />
+                  </span>
+                </div>
+                <p>{p.summary}</p>
+              </Link>
+            ))}
         </div>
         <Link to="/work" className="text-link">
           Explore all projects <ArrowUpRight />

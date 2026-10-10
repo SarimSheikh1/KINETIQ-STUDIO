@@ -252,9 +252,26 @@ export default function Studio({ kind }: { kind: string }) {
               open
               className="member-modal"
               aria-labelledby="member-title"
+              aria-modal="true"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === "Escape") setMember(null);
+                if (e.key === "Tab") {
+                  const elements = Array.from(
+                    e.currentTarget.querySelectorAll<HTMLElement>(
+                      "button,a[href]",
+                    ),
+                  );
+                  const first = elements[0],
+                    last = elements[elements.length - 1];
+                  if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last?.focus();
+                  } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first?.focus();
+                  }
+                }
               }}
             >
               <button
